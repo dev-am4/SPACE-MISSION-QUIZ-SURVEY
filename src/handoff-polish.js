@@ -15,12 +15,13 @@ function setText(selector, value) {
 function polishWelcome() {
   if (!document.querySelector('.welcome-screen')) return
 
-  setText('.welcome-screen .eyebrow', 'แบบทดสอบความรู้และแบบประเมินนิทรรศการ')
+  setText('.welcome-screen .eyebrow', 'ร่วมสนุกและบอกความประทับใจของคุณ')
   setText(
     '.welcome-screen .hero-copy',
-    'ร่วมทบทวนความรู้ด้านดาราศาสตร์และอวกาศ พร้อมแบ่งปันความคิดเห็นต่อการจัดแสดง และรับประกาศนียบัตรดิจิทัลเมื่อทำครบ',
+    'ทำบนจอได้ทันที หรือสแกนคิวอาร์โค้ดให้ทุกคนทำพร้อมกันผ่านมือถือ คะแนนความรู้ 16/20 ขึ้นไป รับประกาศนียบัตรดิจิทัล',
   )
-  setText('.welcome-screen .touch-hint', 'แตะเพื่อเริ่ม หรือสแกนคิวอาร์โค้ดเพื่อทำผ่านมือถือ')
+  setText('.welcome-screen .hero-start span', 'เริ่มทำบนจอนี้')
+  setText('.welcome-screen .touch-hint', 'มาเป็นกลุ่ม? สแกนพร้อมกันได้ ไม่ต้องรอคิว')
   setText('.welcome-screen .label-a', 'เรียนรู้')
   setText('.welcome-screen .label-b', 'สำรวจ')
   setText('.welcome-screen .label-c', 'ค้นพบ')
