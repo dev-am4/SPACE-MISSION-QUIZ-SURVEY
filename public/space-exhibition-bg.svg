@@ -1,0 +1,65 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1180 500) rotate(147) scale(1300 900)">
+      <stop stop-color="#143252"/>
+      <stop offset="0.36" stop-color="#091827"/>
+      <stop offset="1" stop-color="#02060D"/>
+    </radialGradient>
+    <radialGradient id="planet" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1640 886) rotate(-128) scale(570)">
+      <stop stop-color="#88E7F2"/>
+      <stop offset="0.18" stop-color="#3F7EA4"/>
+      <stop offset="0.5" stop-color="#1A3D63"/>
+      <stop offset="0.78" stop-color="#0A1629"/>
+      <stop offset="1" stop-color="#020610"/>
+    </radialGradient>
+    <radialGradient id="moon" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(316 284) rotate(130) scale(146)">
+      <stop stop-color="#EEF4F6"/>
+      <stop offset="0.48" stop-color="#8495A7"/>
+      <stop offset="1" stop-color="#283746"/>
+    </radialGradient>
+    <linearGradient id="nebula" x1="500" y1="84" x2="1420" y2="740" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4BE4FF" stop-opacity="0"/>
+      <stop offset="0.48" stop-color="#4BE4FF" stop-opacity="0.17"/>
+      <stop offset="0.7" stop-color="#A563FF" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#A563FF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="55"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <ellipse cx="980" cy="420" rx="730" ry="310" fill="url(#nebula)" filter="url(#blur)"/>
+  <g fill="#DDF8FF">
+    <circle cx="112" cy="128" r="1.7"/><circle cx="205" cy="89" r="1.1"/><circle cx="414" cy="143" r="1.5"/>
+    <circle cx="521" cy="75" r="1"/><circle cx="682" cy="183" r="1.8"/><circle cx="770" cy="104" r="1"/>
+    <circle cx="921" cy="172" r="1.3"/><circle cx="1095" cy="86" r="1.2"/><circle cx="1274" cy="144" r="1.6"/>
+    <circle cx="1438" cy="82" r="1.1"/><circle cx="1598" cy="172" r="1.7"/><circle cx="1793" cy="96" r="1.2"/>
+    <circle cx="164" cy="528" r="1.2"/><circle cx="356" cy="618" r="1.7"/><circle cx="541" cy="488" r="1.1"/>
+    <circle cx="737" cy="583" r="1.5"/><circle cx="966" cy="502" r="1"/><circle cx="1182" cy="618" r="1.7"/>
+    <circle cx="1362" cy="523" r="1.1"/><circle cx="1522" cy="639" r="1.5"/><circle cx="1770" cy="472" r="1.2"/>
+  </g>
+  <g stroke="#77E9FF" stroke-opacity="0.19" fill="none">
+    <ellipse cx="1434" cy="717" rx="720" ry="195" transform="rotate(-11 1434 717)"/>
+    <ellipse cx="1430" cy="719" rx="610" ry="156" transform="rotate(-11 1430 719)"/>
+  </g>
+  <circle cx="340" cy="300" r="126" fill="url(#moon)"/>
+  <g fill="#253746" opacity="0.36">
+    <circle cx="298" cy="267" r="19"/><circle cx="369" cy="327" r="13"/><circle cx="327" cy="350" r="9"/><circle cx="382" cy="250" r="7"/>
+  </g>
+  <circle cx="340" cy="300" r="132" stroke="#C9F7FF" stroke-opacity="0.14"/>
+  <circle cx="1628" cy="930" r="460" fill="url(#planet)"/>
+  <path d="M1234 818C1409 713 1667 695 1902 760" stroke="#9CEFFF" stroke-opacity="0.26" stroke-width="2"/>
+  <path d="M1207 844C1417 727 1672 722 1920 790" stroke="#89DFFF" stroke-opacity="0.08"/>
+  <g transform="translate(1142 284) rotate(-9)" fill="#B7D6E5" opacity="0.72">
+    <rect x="0" y="0" width="92" height="24" rx="3"/>
+    <rect x="35" y="-22" width="22" height="68" rx="2"/>
+    <rect x="-92" y="5" width="78" height="14" rx="2"/>
+    <rect x="106" y="5" width="84" height="14" rx="2"/>
+    <line x1="-12" y1="12" x2="-92" y2="12" stroke="#84EFFF" stroke-width="2"/>
+    <line x1="92" y1="12" x2="190" y2="12" stroke="#84EFFF" stroke-width="2"/>
+  </g>
+  <circle cx="1219" cy="296" r="4" fill="#71F0FF" filter="url(#glow)"/>
+  <g stroke="#8EEFFF" stroke-opacity="0.14">
+    <path d="M48 760H516"/><path d="M48 781H368"/><path d="M48 802H434"/>
+    <path d="M1480 188H1825"/><path d="M1560 209H1825"/>
+  </g>
+</svg>
