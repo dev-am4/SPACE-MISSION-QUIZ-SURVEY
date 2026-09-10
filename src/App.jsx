@@ -22,7 +22,7 @@ import { questions, sourceNote } from './questions'
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 const STORAGE_KEY = 'space-mission-quiz-survey:sessions:v3'
-const PROJECT_NAME = 'โครงการปรับปรุงนิทรรศการดาราศาสตร์และอวกาศ'
+const PROJECT_NAME = 'นิทรรศการดาราศาสตร์และอวกาศ'
 const PROJECT_PLACE = 'ณ ศูนย์วิทยาศาสตร์เพื่อการศึกษานครสวรรค์'
 
 function makeId(prefix = 'SM') {
@@ -102,7 +102,6 @@ function Welcome({ onStart }) {
           <h1>SPACE MISSION<br/><span>QUIZ & SURVEY</span></h1>
           <p className="hero-copy">
             แบบทดสอบความรู้ดาราศาสตร์และอวกาศ และแบบประเมินนิทรรศการ
-            ผ่านประสบการณ์แบบ Interactive สำหรับจอ Touchscreen
           </p>
           <button className="primary-btn hero-start" onClick={onStart}>
             <span>เริ่มทำแบบทดสอบ</span>
