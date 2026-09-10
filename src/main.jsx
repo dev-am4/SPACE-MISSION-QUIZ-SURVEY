@@ -7,5 +7,6 @@ import './review-enhancer.css'
 import './welcome-qr.css'
 import './review-enhancer'
 import './welcome-qr'
+import './handoff-polish'
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
