@@ -37,18 +37,20 @@ function polishQuiz() {
 
   const topLabel = screen.querySelector('.top-title span')
   const ghost = screen.querySelector('.mission-chip.ghost')
-  const isSurvey = ghost?.textContent?.includes('SURVEY') || topLabel?.textContent?.includes('VISITOR SURVEY')
-  const isEditing = topLabel?.textContent?.includes('EDIT ANSWER')
+  const questionChip = screen.querySelector('.mission-chip:not(.ghost)')
+  const numberMatch = questionChip?.textContent?.match(/(\d+)/)
+  const questionNumber = numberMatch ? Number(numberMatch[1]) : 0
+  const isSurvey = questionNumber > 20
+  const isEditing = topLabel?.textContent?.includes('EDIT ANSWER') || topLabel?.textContent === 'แก้ไขคำตอบ'
 
   if (topLabel) {
     const next = isEditing ? 'แก้ไขคำตอบ' : isSurvey ? 'แบบประเมินนิทรรศการ' : 'แบบทดสอบความรู้'
     if (topLabel.textContent !== next) topLabel.textContent = next
   }
 
-  const questionChip = screen.querySelector('.mission-chip:not(.ghost)')
-  if (questionChip) {
-    const match = questionChip.textContent.match(/(\d+)/)
-    if (match) questionChip.textContent = `ข้อ ${Number(match[1])}`
+  if (questionChip && questionNumber) {
+    const next = `ข้อ ${questionNumber}`
+    if (questionChip.textContent !== next) questionChip.textContent = next
   }
 
   if (ghost) {
