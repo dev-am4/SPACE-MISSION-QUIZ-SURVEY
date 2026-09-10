@@ -97,12 +97,6 @@
   filter: grayscale(.35);
 }
 
-/* While a selected answer is waiting for the normal page transition, avoid visual
-   encouragement to tap a second option. This class is removed automatically. */
-.answer-transition-locked .answer-card {
-  pointer-events: none;
-}
-
 @media (max-width: 760px) {
   .review-options-row {
     gap: 5px;
