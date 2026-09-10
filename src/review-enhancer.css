@@ -1,0 +1,88 @@
+/* Review page: show every choice in one comparison line while clearly marking the saved answer. */
+.review-selected-original {
+  display: none !important;
+}
+
+.review-options-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 7px;
+  padding: 1px 0 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 232, 255, .28) transparent;
+}
+
+.review-options-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.review-options-row::-webkit-scrollbar-thumb {
+  background: rgba(100, 232, 255, .28);
+}
+
+.review-option-pill {
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 5px 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  color: #8297ab;
+  background: rgba(255, 255, 255, .025);
+  border: 1px solid rgba(130, 201, 230, .10);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.review-option-letter {
+  color: #9fb4c6;
+  font-family: Orbitron, sans-serif;
+  font-size: 9px;
+}
+
+.review-option-pill.selected {
+  color: #eaffff;
+  background: linear-gradient(90deg, rgba(72, 214, 239, .19), rgba(50, 83, 139, .20));
+  border-color: rgba(100, 232, 255, .62);
+  box-shadow: inset 2px 0 #64e8ff, 0 0 18px rgba(100, 232, 255, .08);
+}
+
+.review-option-pill.selected .review-option-letter {
+  color: var(--cyan);
+}
+
+.review-option-selected-mark {
+  margin-left: 2px;
+  color: var(--success);
+  font-weight: 900;
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .review-options-row {
+    gap: 5px;
+    margin-top: 6px;
+    padding-bottom: 3px;
+  }
+
+  .review-option-pill {
+    min-height: 28px;
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .review-option-letter {
+    font-size: 8px;
+  }
+
+  .review-option-selected-mark {
+    font-size: 12px;
+  }
+}
