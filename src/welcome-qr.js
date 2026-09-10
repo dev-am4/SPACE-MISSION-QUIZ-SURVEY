@@ -13,13 +13,13 @@ async function ensureWelcomeQr() {
     const url = `${window.location.origin}${window.location.pathname}`
     const card = document.createElement('div')
     card.className = 'welcome-mobile-qr'
-    card.setAttribute('aria-label', 'QR Code สำหรับเปิดแบบสอบถามบนมือถือ')
+    card.setAttribute('aria-label', 'คิวอาร์โค้ดสำหรับเปิดแบบสอบถามบนมือถือ')
 
     const qrWrap = document.createElement('div')
     qrWrap.className = 'welcome-mobile-qr-code'
 
     const img = document.createElement('img')
-    img.alt = 'QR Code สำหรับเปิดแบบสอบถามบนมือถือ'
+    img.alt = 'คิวอาร์โค้ดสำหรับเปิดแบบสอบถามบนมือถือ'
     img.src = await QRCode.toDataURL(url, {
       width: 320,
       margin: 1,
@@ -30,7 +30,7 @@ async function ensureWelcomeQr() {
 
     const copy = document.createElement('div')
     copy.className = 'welcome-mobile-qr-copy'
-    copy.innerHTML = '<b>ทำแบบสอบถามบนมือถือ</b><span>สแกน QR Code แล้วเริ่มทำได้ทันที</span><small>SCAN TO JOIN · MOBILE ACCESS</small>'
+    copy.innerHTML = '<b>ทำแบบสอบถามผ่านมือถือ</b><span>สแกนคิวอาร์โค้ดเพื่อเริ่มทำแบบสอบถามได้ทันที</span>'
 
     card.append(qrWrap, copy)
     poster.appendChild(card)
