@@ -1,0 +1,19 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="30" y1="24" x2="130" y2="136" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#79E9F7"/>
+      <stop offset="1" stop-color="#456E9B"/>
+    </linearGradient>
+  </defs>
+  <circle cx="80" cy="80" r="76" fill="#102A40"/>
+  <circle cx="80" cy="80" r="70" stroke="#D6B969" stroke-width="2"/>
+  <circle cx="80" cy="80" r="58" stroke="#79E9F7" stroke-opacity="0.48"/>
+  <ellipse cx="80" cy="80" rx="52" ry="18" transform="rotate(-24 80 80)" stroke="#79E9F7" stroke-opacity="0.45"/>
+  <circle cx="119" cy="59" r="5" fill="#D6B969"/>
+  <path d="M76 43C89 48 99 60 104 73L89 88L72 71L76 43Z" fill="url(#g)"/>
+  <path d="M72 71L58 85L75 88L89 88L72 71Z" fill="#DCECF2"/>
+  <path d="M89 88L76 103L72 87L72 71L89 88Z" fill="#8FBED0"/>
+  <circle cx="86" cy="63" r="5" fill="#102A40" stroke="#EAFBFF" stroke-width="2"/>
+  <path d="M66 95C58 104 52 115 50 126C61 121 72 116 82 108" stroke="#D6B969" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="80" cy="80" r="74" stroke="#FFFFFF" stroke-opacity="0.12"/>
+</svg>
