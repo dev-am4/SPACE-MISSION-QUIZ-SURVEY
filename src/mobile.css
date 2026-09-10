@@ -1,0 +1,394 @@
+/* Mobile-first overrides loaded after styles.css */
+.spin-icon { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.sync-warning {
+  margin: 8px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #ffc979;
+  font-size: 12px;
+}
+
+.certificate-mobile-hint {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 16px auto 0;
+  color: #9db0c4;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.shared-state-screen {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.shared-state-panel {
+  position: relative;
+  z-index: 3;
+  width: min(560px, 92vw);
+  padding: 44px 30px;
+  text-align: center;
+  color: #eaf9ff;
+  background: rgba(4, 15, 29, .94);
+  border: 1px solid rgba(127, 229, 255, .24);
+}
+.shared-state-panel > svg { color: var(--cyan); }
+.shared-state-panel h1 { margin: 18px 0 6px; font-size: 30px; }
+.shared-state-panel p { margin: 0 0 24px; color: #9eafc3; }
+
+/* The PDF capture uses a fixed A4-landscape composition even when the on-screen preview is mobile. */
+.certificate.pdf-export {
+  width: 1120px !important;
+  height: 792px !important;
+  min-width: 1120px !important;
+  min-height: 792px !important;
+  aspect-ratio: auto !important;
+  padding: 58px !important;
+  overflow: hidden !important;
+}
+.certificate.pdf-export .cert-frame { inset: 16px !important; }
+.certificate.pdf-export .cert-header {
+  grid-template-columns: auto 1fr auto !important;
+  gap: 16px !important;
+}
+.certificate.pdf-export .cert-seal { width: 58px !important; height: 58px !important; }
+.certificate.pdf-export .cert-project strong { font-size: 19px !important; }
+.certificate.pdf-export .cert-project span { font-size: 13px !important; }
+.certificate.pdf-export .cert-id { grid-column: auto !important; text-align: right !important; font-size: 8px !important; }
+.certificate.pdf-export .cert-id b { font-size: 11px !important; }
+.certificate.pdf-export .cert-body { width: 76% !important; margin: 46px auto 0 !important; }
+.certificate.pdf-export .cert-kicker { font-size: 12px !important; }
+.certificate.pdf-export .cert-body h1 { font-size: 58px !important; }
+.certificate.pdf-export .cert-label { margin-top: 14px !important; font-size: 17px !important; }
+.certificate.pdf-export .cert-body h2 { font-size: 50px !important; }
+.certificate.pdf-export .cert-line { width: 72% !important; }
+.certificate.pdf-export .cert-text { font-size: 16px !important; }
+.certificate.pdf-export .cert-footer-grid {
+  position: absolute !important;
+  left: 58px !important;
+  right: 58px !important;
+  bottom: 54px !important;
+  margin: 0 !important;
+  grid-template-columns: .8fr 1fr auto !important;
+  gap: 20px !important;
+}
+.certificate.pdf-export .cert-score-box strong { font-size: 34px !important; }
+.certificate.pdf-export .cert-score-box span,
+.certificate.pdf-export .cert-date-box span { font-size: 11px !important; }
+.certificate.pdf-export .cert-date-box strong { font-size: 15px !important; }
+.certificate.pdf-export .cert-qr-box { grid-column: auto !important; width: 110px !important; margin: 0 !important; }
+
+@media (max-width: 760px) {
+  html, body, #root { min-height: 100%; }
+  body { overscroll-behavior: none; }
+
+  .screen {
+    width: 100%;
+    min-height: 100dvh;
+  }
+
+  .project-backdrop-image { object-position: 58% center; }
+  .project-grid { background-size: 34px 34px; opacity: .13; }
+
+  .primary-btn,
+  .secondary-btn,
+  .download-btn {
+    min-height: 54px;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+
+  /* Welcome: keep visual artwork on phone rather than hiding it. */
+  .welcome-screen {
+    height: auto;
+    min-height: 100dvh;
+    overflow-y: auto;
+    padding: max(16px, env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
+  }
+  .welcome-top { text-align: left; }
+  .project-identity { width: 100%; gap: 10px; }
+  .project-seal { width: 40px; height: 40px; flex: 0 0 auto; }
+  .project-identity strong { font-size: 11px; }
+  .project-identity span { font-size: 9px; }
+
+  .hero-layout {
+    height: auto;
+    min-height: 0;
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .hero-copy-block { text-align: left; }
+  .eyebrow { font-size: 9px; letter-spacing: .13em; }
+  .hero-copy-block h1 {
+    font-size: clamp(42px, 13.5vw, 62px);
+    line-height: .96;
+  }
+  .hero-copy {
+    margin: 20px 0 24px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .hero-start { width: 100%; min-width: 0; }
+  .touch-hint { margin-top: 14px; font-size: 11px; line-height: 1.5; }
+  .mission-poster {
+    display: block !important;
+    justify-self: center;
+    width: min(84vw, 360px);
+    margin: 0 auto;
+  }
+  .poster-moon { width: 60px; height: 60px; }
+  .zone-ribbon { display: none !important; }
+
+  /* Quiz */
+  .quiz-screen {
+    height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 64px;
+    grid-template-columns: 52px 1fr 52px;
+    padding: 0 10px;
+  }
+  .icon-btn { width: 46px; height: 46px; }
+  .top-title span { margin: 0; font-size: 8px; }
+  .top-title strong { display: none; }
+  .counter { font-size: 14px; }
+  .progress-track { position: sticky; top: 64px; z-index: 10; }
+  .question-wrap {
+    width: calc(100% - 24px);
+    margin: 0 auto;
+    padding: 18px 0 28px;
+  }
+  .question-meta-row { margin-bottom: 9px; }
+  .mission-chip { padding: 5px 7px; font-size: 7px; }
+  .question-card {
+    min-height: 126px;
+    margin-bottom: 12px;
+    padding: 24px 18px;
+  }
+  .question-card::before { width: 74px; }
+  .question-card h2 {
+    font-size: clamp(21px, 6.3vw, 30px);
+    line-height: 1.42;
+  }
+  .visual-orbit { width: 250px; height: 72px; right: -110px; }
+  .answers-grid,
+  .answers-grid-six { grid-template-columns: 1fr; gap: 9px; }
+  .answer-card {
+    min-height: 68px;
+    padding: 10px 11px;
+    grid-template-columns: 44px 1fr 24px;
+    gap: 10px;
+  }
+  .answer-letter { width: 42px; height: 42px; }
+  .answer-text { font-size: 15px; line-height: 1.38; }
+  .quiz-footnote { margin-top: 11px; font-size: 10px; }
+
+  /* Review */
+  .review-screen { height: 100dvh; grid-template-rows: auto 1fr auto; }
+  .review-header {
+    padding: max(14px, env(safe-area-inset-top)) 14px 12px;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .review-header .project-identity { display: none; }
+  .review-heading h1 { font-size: 25px; line-height: 1.2; }
+  .review-heading p:not(.eyebrow) { margin-top: 5px; font-size: 11px; line-height: 1.5; }
+  .review-scroll { padding: 16px 12px 0; }
+  .review-section-title { margin-bottom: 10px; }
+  .review-section-title > span { font-size: 22px; }
+  .review-section-title b { font-size: 15px; }
+  .review-section-title small { font-size: 9px; }
+  .review-section-title.survey-title { margin-top: 24px; }
+  .review-list { gap: 7px; }
+  .review-item {
+    min-height: 0;
+    padding: 11px 9px;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  .review-number { font-size: 12px; }
+  .review-content h3 { font-size: 12px; line-height: 1.45; }
+  .review-content p { font-size: 11px; line-height: 1.4; }
+  .edit-btn {
+    min-width: 46px;
+    min-height: 46px;
+    padding: 0 10px;
+    font-size: 0;
+  }
+  .edit-btn svg { width: 18px; height: 18px; }
+  .review-actionbar {
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .review-status { justify-content: center; font-size: 11px; }
+  .review-actionbar .primary-btn { width: 100%; }
+
+  /* Confirmation / name */
+  .confirm-screen,
+  .name-screen {
+    height: auto;
+    min-height: 100dvh;
+    overflow-y: auto;
+    padding: max(18px, env(safe-area-inset-top)) 14px calc(22px + env(safe-area-inset-bottom));
+  }
+  .confirm-panel,
+  .name-panel {
+    width: 100%;
+    padding: 32px 18px 24px;
+  }
+  .confirm-icon,
+  .mission-badge.small { width: 60px; height: 60px; margin-bottom: 16px; }
+  .confirm-panel h1,
+  .name-panel h1 { font-size: 30px; line-height: 1.2; }
+  .confirm-copy,
+  .name-panel > p { margin-top: 14px; font-size: 14px; line-height: 1.65; }
+  .confirm-project { margin: 22px 0; width: 100%; }
+  .confirm-actions { flex-direction: column; }
+  .confirm-actions > * { width: 100%; }
+  .name-panel .project-identity {
+    position: static;
+    margin-bottom: 22px;
+    opacity: .75;
+    text-align: left;
+  }
+  .name-panel .mission-badge { margin-top: 0; }
+  .name-input {
+    height: 64px;
+    margin: 24px 0 14px;
+    padding: 0 14px;
+    font-size: 22px;
+  }
+  .name-panel .primary-btn { width: 100%; }
+
+  /* Certificate phone preview is reflowed for readability. PDF remains landscape through .pdf-export. */
+  .certificate-screen {
+    height: auto;
+    min-height: 100dvh;
+    overflow-y: auto;
+    padding: max(16px, env(safe-area-inset-top)) 10px calc(26px + env(safe-area-inset-bottom));
+  }
+  .certificate-shell {
+    width: 100%;
+    overflow: visible;
+  }
+  .certificate-toolbar {
+    margin: 0 4px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .certificate-toolbar h1 { font-size: 26px; }
+  .certificate-actions { width: 100%; display: grid; grid-template-columns: 1fr; }
+  .certificate-actions .secondary-btn,
+  .certificate-actions .download-btn { width: 100%; min-height: 52px; }
+  .sync-warning { font-size: 10px; line-height: 1.4; }
+
+  .certificate {
+    min-width: 0 !important;
+    width: 100%;
+    aspect-ratio: auto;
+    min-height: 650px;
+    padding: 28px 20px 26px;
+    overflow: hidden;
+  }
+  .cert-frame { inset: 8px; }
+  .cert-frame::after { inset: 5px; }
+  .cert-space-art { width: 105%; right: -58%; bottom: -18%; opacity: .34; }
+  .cert-header {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+  }
+  .cert-seal { width: 46px; height: 46px; }
+  .cert-project strong { font-size: 11px; line-height: 1.35; }
+  .cert-project span { font-size: 8px; line-height: 1.35; }
+  .cert-id {
+    grid-column: 1 / -1;
+    text-align: left;
+    padding-top: 8px;
+    border-top: 1px solid rgba(25, 56, 75, .14);
+    font-size: 7px;
+  }
+  .cert-id b { font-size: 10px; }
+  .cert-body {
+    width: 100%;
+    margin: 32px auto 0;
+  }
+  .cert-kicker { font-size: 7px; letter-spacing: .1em; }
+  .cert-body h1 { font-size: 31px; }
+  .cert-label { margin-top: 16px; font-size: 12px; }
+  .cert-body h2 { font-size: 32px; line-height: 1.25; overflow-wrap: anywhere; }
+  .cert-line { width: 86%; }
+  .cert-text { font-size: 11px; line-height: 1.55; }
+  .cert-footer-grid {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .cert-score-box span,
+  .cert-date-box span { font-size: 8px; }
+  .cert-score-box strong { font-size: 25px; }
+  .cert-date-box strong { font-size: 11px; line-height: 1.4; }
+  .cert-qr-box {
+    grid-column: 1 / -1;
+    width: 104px;
+    margin: 4px auto 0;
+  }
+  .cert-qr-box span { font-size: 5px; }
+  .certificate-mobile-hint { padding: 0 12px; font-size: 11px; }
+
+  .shared-state-panel { width: 100%; padding: 34px 20px; }
+  .shared-state-panel h1 { font-size: 26px; }
+  .shared-state-panel p { font-size: 13px; }
+}
+
+/* Phone landscape: prioritize fitting one question without sacrificing touch targets. */
+@media (orientation: landscape) and (max-height: 600px) and (max-width: 1000px) {
+  .quiz-screen { overflow-y: auto; }
+  .topbar { height: 54px; grid-template-columns: 50px 1fr 50px; }
+  .progress-track { top: 54px; }
+  .icon-btn { width: 42px; height: 42px; }
+  .question-wrap { width: 96vw; padding: 10px 0 16px; }
+  .question-meta-row { margin-bottom: 7px; }
+  .question-card { min-height: 92px; margin-bottom: 9px; padding: 16px 22px; }
+  .question-card h2 { font-size: clamp(19px, 3.5vw, 28px); line-height: 1.28; }
+  .answers-grid,
+  .answers-grid-six { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .answer-card { min-height: 56px; padding: 7px 10px; grid-template-columns: 38px 1fr 20px; }
+  .answer-letter { width: 36px; height: 36px; }
+  .answer-text { font-size: 13px; }
+  .quiz-footnote { display: none; }
+
+  .confirm-screen,
+  .name-screen { padding: 10px; }
+  .confirm-panel,
+  .name-panel { width: min(760px, 96vw); padding: 22px 26px; }
+  .confirm-icon,
+  .mission-badge.small { width: 50px; height: 50px; margin-bottom: 10px; }
+  .confirm-panel h1,
+  .name-panel h1 { font-size: 27px; }
+  .confirm-copy,
+  .name-panel > p { margin-top: 8px; font-size: 12px; }
+  .confirm-project { margin: 12px 0; }
+  .name-input { height: 54px; margin: 14px 0 10px; }
+}
