@@ -1,0 +1,132 @@
+.certificate-eligibility-note {
+  margin: 10px 0 0;
+  color: #d5eaf2;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.certificate-threshold-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(2, 7, 16, .88);
+  backdrop-filter: blur(8px);
+}
+
+.certificate-threshold-panel {
+  width: min(620px, 100%);
+  padding: 34px;
+  text-align: center;
+  border: 1px solid rgba(100, 232, 255, .28);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(8, 25, 45, .98), rgba(5, 14, 28, .98));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .42), inset 0 1px rgba(255,255,255,.04);
+}
+
+.certificate-threshold-score {
+  width: 132px;
+  height: 132px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(100, 232, 255, .38);
+  background: radial-gradient(circle at 35% 28%, rgba(100,232,255,.15), rgba(10,23,40,.92));
+  box-shadow: 0 0 40px rgba(100,232,255,.1);
+}
+
+.certificate-threshold-score strong {
+  color: #7cecff;
+  font-family: Orbitron, 'Noto Sans Thai', sans-serif;
+  font-size: 46px;
+}
+
+.certificate-threshold-score span {
+  margin-left: 4px;
+  color: #9db0c0;
+  font-size: 16px;
+}
+
+.certificate-threshold-kicker {
+  margin: 0 0 6px;
+  color: #7cecff;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.certificate-threshold-panel h2 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.25;
+}
+
+.certificate-threshold-panel > p:not(.certificate-threshold-kicker) {
+  margin: 0 auto;
+  max-width: 500px;
+  color: #b9c9d6;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.certificate-threshold-panel .certificate-threshold-thanks {
+  margin-top: 10px;
+  color: #8ea3b5;
+  font-size: 13px;
+}
+
+.certificate-threshold-actions {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.certificate-threshold-actions button {
+  min-width: 190px;
+}
+
+@media (max-width: 760px) {
+  .certificate-eligibility-note {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .certificate-threshold-overlay {
+    padding: 16px;
+  }
+
+  .certificate-threshold-panel {
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+
+  .certificate-threshold-score {
+    width: 108px;
+    height: 108px;
+    margin-bottom: 16px;
+  }
+
+  .certificate-threshold-score strong {
+    font-size: 38px;
+  }
+
+  .certificate-threshold-panel > p:not(.certificate-threshold-kicker) {
+    font-size: 14px;
+  }
+
+  .certificate-threshold-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .certificate-threshold-actions button {
+    width: 100%;
+    min-width: 0;
+  }
+}
