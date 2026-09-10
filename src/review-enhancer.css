@@ -65,6 +65,44 @@
   font-size: 13px;
 }
 
+/* A missing answer must never look like a completed response. */
+.review-item.review-item-missing {
+  border-color: rgba(255, 188, 91, .38);
+  border-left-color: #ffc979;
+  background: rgba(39, 25, 9, .34);
+}
+
+.review-item.review-item-missing .review-options-row::before {
+  content: 'ยังไม่ได้ตอบ';
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 5px 9px;
+  display: inline-flex;
+  align-items: center;
+  color: #ffd89b;
+  border: 1px solid rgba(255, 201, 121, .42);
+  background: rgba(255, 171, 58, .08);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.review-status.review-status-incomplete {
+  color: #ffc979;
+}
+
+.review-actionbar .primary-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  filter: grayscale(.35);
+}
+
+/* While a selected answer is waiting for the normal page transition, avoid visual
+   encouragement to tap a second option. This class is removed automatically. */
+.answer-transition-locked .answer-card {
+  pointer-events: none;
+}
+
 @media (max-width: 760px) {
   .review-options-row {
     gap: 5px;
@@ -72,7 +110,8 @@
     padding-bottom: 3px;
   }
 
-  .review-option-pill {
+  .review-option-pill,
+  .review-item.review-item-missing .review-options-row::before {
     min-height: 28px;
     padding: 4px 7px;
     font-size: 10px;
