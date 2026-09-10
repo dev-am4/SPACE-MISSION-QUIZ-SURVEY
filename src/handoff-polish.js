@@ -127,7 +127,7 @@ function start() {
   if (!root) return
   queuePolish()
   const observer = new MutationObserver(queuePolish)
-  observer.observe(root, { childList: true, subtree: true })
+  observer.observe(root, { childList: true, characterData: true, subtree: true })
 }
 
 if (document.readyState === 'loading') {
