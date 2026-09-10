@@ -7,11 +7,13 @@ import {
   Download,
   Edit3,
   FileCheck2,
+  LoaderCircle,
   QrCode,
   RotateCcw,
   Rocket,
   ShieldCheck,
   Sparkles,
+  WifiOff,
 } from 'lucide-react'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
@@ -19,7 +21,7 @@ import QRCode from 'qrcode'
 import { questions, sourceNote } from './questions'
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
-const STORAGE_KEY = 'space-mission-quiz-survey:sessions:v2'
+const STORAGE_KEY = 'space-mission-quiz-survey:sessions:v3'
 const PROJECT_NAME = 'โครงการปรับปรุงนิทรรศการดาราศาสตร์และอวกาศ'
 const PROJECT_PLACE = 'ณ ศูนย์วิทยาศาสตร์เพื่อการศึกษานครสวรรค์'
 
@@ -28,13 +30,41 @@ function makeId(prefix = 'SM') {
   return `${prefix}-${random || `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`.toUpperCase()}`
 }
 
-function saveSession(session) {
+function saveSessionLocal(session) {
   try {
     const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-    previous.push(session)
+    previous.push({ ...session, sync_status: 'pending' })
     localStorage.setItem(STORAGE_KEY, JSON.stringify(previous.slice(-500)))
   } catch (error) {
     console.warn('Unable to save session locally', error)
+  }
+}
+
+function markSessionSynced(certificateId) {
+  try {
+    const previous = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    const next = previous.map((item) => item.certificate_id === certificateId
+      ? { ...item, sync_status: 'synced' }
+      : item)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+  } catch (error) {
+    console.warn('Unable to mark session synced', error)
+  }
+}
+
+async function saveSessionRemote(session) {
+  try {
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(session),
+    })
+    if (!response.ok) throw new Error(`Remote save failed: ${response.status}`)
+    markSessionSynced(session.certificate_id)
+    return true
+  } catch (error) {
+    console.warn('Supabase sync unavailable; local copy retained', error)
+    return false
   }
 }
 
@@ -230,7 +260,7 @@ function Confirm({ onBack, onConfirm }) {
   )
 }
 
-function NameEntry({ value, onChange, onSubmit }) {
+function NameEntry({ value, onChange, onSubmit, saving }) {
   const inputRef = useRef(null)
   useEffect(() => inputRef.current?.focus(), [])
 
@@ -248,18 +278,21 @@ function NameEntry({ value, onChange, onSubmit }) {
           className="name-input"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter' && value.trim()) onSubmit() }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && value.trim() && !saving) onSubmit() }}
           placeholder="ชื่อ - นามสกุล"
           maxLength={80}
           autoComplete="off"
+          disabled={saving}
         />
-        <button className="primary-btn" disabled={!value.trim()} onClick={onSubmit}>สร้างประกาศนียบัตร <Sparkles size={23}/></button>
+        <button className="primary-btn" disabled={!value.trim() || saving} onClick={onSubmit}>
+          {saving ? <><LoaderCircle className="spin-icon" size={22}/> กำลังบันทึก...</> : <>สร้างประกาศนียบัตร <Sparkles size={23}/></>}
+        </button>
       </section>
     </main>
   )
 }
 
-function Certificate({ name, score, certificateId, issuedAt, onRestart }) {
+function Certificate({ name, score, certificateId, issuedAt, onRestart, shared = false, syncOk = true }) {
   const certRef = useRef(null)
   const [qrDataUrl, setQrDataUrl] = useState('')
   const [downloading, setDownloading] = useState(false)
@@ -268,28 +301,31 @@ function Certificate({ name, score, certificateId, issuedAt, onRestart }) {
   }), [issuedAt])
 
   useEffect(() => {
-    const payload = [
-      PROJECT_NAME,
-      PROJECT_PLACE,
-      `Certificate ID: ${certificateId}`,
-      `Name: ${name}`,
-      `Knowledge Score: ${score}/20`,
-      `Issued: ${dateLabel}`,
-    ].join('\n')
-
-    QRCode.toDataURL(payload, {
+    const certificateUrl = `${window.location.origin}${window.location.pathname}?certificate=${encodeURIComponent(certificateId)}`
+    QRCode.toDataURL(certificateUrl, {
       width: 340,
       margin: 1,
       errorCorrectionLevel: 'M',
       color: { dark: '#0b1830', light: '#ffffff' },
     }).then(setQrDataUrl).catch((error) => console.warn('QR generation failed', error))
-  }, [certificateId, dateLabel, name, score])
+  }, [certificateId])
 
   async function downloadPdf() {
     if (!certRef.current || downloading) return
     setDownloading(true)
+    let clone
     try {
-      const canvas = await html2canvas(certRef.current, {
+      clone = certRef.current.cloneNode(true)
+      clone.classList.add('pdf-export')
+      clone.style.position = 'fixed'
+      clone.style.left = '-12000px'
+      clone.style.top = '0'
+      clone.style.margin = '0'
+      document.body.appendChild(clone)
+
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+
+      const canvas = await html2canvas(clone, {
         scale: 2,
         useCORS: true,
         backgroundColor: '#f7f2e8',
@@ -309,6 +345,7 @@ function Certificate({ name, score, certificateId, issuedAt, onRestart }) {
       console.error('PDF generation failed', error)
       alert('ไม่สามารถสร้างไฟล์ PDF ได้ กรุณาลองใหม่อีกครั้ง')
     } finally {
+      clone?.remove()
       setDownloading(false)
     }
   }
@@ -320,13 +357,14 @@ function Certificate({ name, score, certificateId, issuedAt, onRestart }) {
         <div className="certificate-toolbar">
           <div>
             <p className="eyebrow">MISSION ACCOMPLISHED</p>
-            <h1>ประกาศนียบัตรพร้อมแล้ว</h1>
+            <h1>{shared ? 'ประกาศนียบัตรดิจิทัล' : 'ประกาศนียบัตรพร้อมแล้ว'}</h1>
+            {!shared && !syncOk && <p className="sync-warning"><WifiOff size={16}/> บันทึกในเครื่องแล้ว แต่ยังไม่สามารถซิงก์ขึ้นฐานข้อมูลได้</p>}
           </div>
           <div className="certificate-actions">
             <button className="download-btn" onClick={downloadPdf} disabled={downloading}>
               <Download size={21}/>{downloading ? 'กำลังสร้าง PDF...' : 'ดาวน์โหลด PDF'}
             </button>
-            <button className="secondary-btn" onClick={onRestart}><RotateCcw size={20}/> เริ่มใหม่</button>
+            {!shared && <button className="secondary-btn" onClick={onRestart}><RotateCcw size={20}/> เริ่มใหม่</button>}
           </div>
         </div>
 
@@ -355,18 +393,48 @@ function Certificate({ name, score, certificateId, issuedAt, onRestart }) {
             <div className="cert-score-box"><span>คะแนนความรู้</span><strong>{score}<small>/20</small></strong></div>
             <div className="cert-date-box"><span>วันที่ออกประกาศนียบัตร</span><strong>{dateLabel}</strong></div>
             <div className="cert-qr-box">
-              {qrDataUrl ? <img src={qrDataUrl} alt="QR Code ประกาศนียบัตร" /> : <QrCode size={54} />}
-              <span>QR CERTIFICATE DATA</span>
+              {qrDataUrl ? <img src={qrDataUrl} alt="QR Code สำหรับเปิดประกาศนียบัตรบนมือถือ" /> : <QrCode size={54} />}
+              <span>SCAN · OPEN · DOWNLOAD PDF</span>
             </div>
           </div>
         </div>
+
+        {!shared && <p className="certificate-mobile-hint">สแกน QR Code ด้วยมือถือเพื่อเปิดประกาศนียบัตร และดาวน์โหลดไฟล์ PDF บนอุปกรณ์ของคุณ</p>}
+      </section>
+    </main>
+  )
+}
+
+function SharedLoading() {
+  return (
+    <main className="screen shared-state-screen">
+      <SpaceBackdrop variant="certificate" />
+      <section className="shared-state-panel">
+        <LoaderCircle className="spin-icon" size={42}/>
+        <h1>กำลังเปิดประกาศนียบัตร</h1>
+        <p>กำลังตรวจสอบข้อมูลจากระบบ</p>
+      </section>
+    </main>
+  )
+}
+
+function SharedError({ onBack }) {
+  return (
+    <main className="screen shared-state-screen">
+      <SpaceBackdrop variant="certificate" />
+      <section className="shared-state-panel">
+        <WifiOff size={42}/>
+        <h1>ไม่พบข้อมูลประกาศนียบัตร</h1>
+        <p>กรุณาตรวจสอบการเชื่อมต่อ หรือสแกน QR Code ใหม่อีกครั้ง</p>
+        <button className="secondary-btn" onClick={onBack}>กลับหน้าแรก</button>
       </section>
     </main>
   )
 }
 
 export default function App() {
-  const [view, setView] = useState('welcome')
+  const certificateParam = useMemo(() => new URLSearchParams(window.location.search).get('certificate'), [])
+  const [view, setView] = useState(certificateParam ? 'shared-loading' : 'welcome')
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [name, setName] = useState('')
@@ -376,10 +444,37 @@ export default function App() {
   const [certificateId, setCertificateId] = useState('')
   const [editingQuestion, setEditingQuestion] = useState(null)
   const [lastTouch, setLastTouch] = useState(Date.now())
+  const [saving, setSaving] = useState(false)
+  const [syncOk, setSyncOk] = useState(true)
 
   const score = useMemo(() => questions
     .filter(q => q.type === 'quiz')
     .reduce((total, q) => total + (answers[q.number] === q.answer ? 1 : 0), 0), [answers])
+
+  useEffect(() => {
+    if (!certificateParam) return
+    let cancelled = false
+
+    fetch(`/api/certificate?id=${encodeURIComponent(certificateParam)}`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Certificate fetch failed: ${response.status}`)
+        return response.json()
+      })
+      .then((data) => {
+        if (cancelled) return
+        setName(data.participant_name || '')
+        setCertificateId(data.certificate_id || certificateParam)
+        setIssuedAt(data.finished_at || data.created_at || new Date().toISOString())
+        setAnswers({})
+        window.__sharedCertificateScore = Number(data.knowledge_score || 0)
+        setView('shared-certificate')
+      })
+      .catch(() => {
+        if (!cancelled) setView('shared-error')
+      })
+
+    return () => { cancelled = true }
+  }, [certificateParam])
 
   useEffect(() => {
     const markActive = () => setLastTouch(Date.now())
@@ -392,7 +487,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (view === 'welcome') return
+    if (view === 'welcome' || view.startsWith('shared')) return
     const timer = window.setInterval(() => {
       if (Date.now() - lastTouch > 180000) restart()
     }, 10000)
@@ -408,6 +503,7 @@ export default function App() {
     setIssuedAt(null)
     setCertificateId('')
     setEditingQuestion(null)
+    setSyncOk(true)
     setView('quiz')
   }
 
@@ -448,15 +544,14 @@ export default function App() {
     setView('name')
   }
 
-  function finishCertificate() {
+  async function finishCertificate() {
+    if (saving || !name.trim()) return
+    setSaving(true)
+
     const now = new Date().toISOString()
     const finalName = name.trim()
     const finalId = certificateId || makeId('NSC')
-    setName(finalName)
-    setCertificateId(finalId)
-    setIssuedAt(now)
-
-    saveSession({
+    const session = {
       id: makeId('SESSION'),
       certificate_id: finalId,
       started_at: startedAt,
@@ -474,11 +569,20 @@ export default function App() {
         type: q.type,
         is_correct: q.type === 'quiz' ? answers[q.number] === q.answer : null,
       }))
-    })
+    }
+
+    setName(finalName)
+    setCertificateId(finalId)
+    setIssuedAt(now)
+    saveSessionLocal(session)
+    const remoteOk = await saveSessionRemote(session)
+    setSyncOk(remoteOk)
+    setSaving(false)
     setView('certificate')
   }
 
   function restart() {
+    if (window.location.search) window.history.replaceState({}, '', window.location.pathname)
     setView('welcome')
     setIndex(0)
     setAnswers({})
@@ -489,14 +593,28 @@ export default function App() {
     setCertificateId('')
     setEditingQuestion(null)
     setLastTouch(Date.now())
+    setSaving(false)
+    setSyncOk(true)
   }
 
+  if (view === 'shared-loading') return <SharedLoading />
+  if (view === 'shared-error') return <SharedError onBack={restart} />
+  if (view === 'shared-certificate') return (
+    <Certificate
+      name={name}
+      score={Number(window.__sharedCertificateScore || 0)}
+      certificateId={certificateId}
+      issuedAt={issuedAt}
+      onRestart={restart}
+      shared
+    />
+  )
   if (view === 'welcome') return <Welcome onStart={start} />
   if (view === 'quiz') return <Quiz index={index} answers={answers} onAnswer={answer} onBack={backFromQuiz} editing={editingQuestion !== null} />
   if (view === 'review') return <Review answers={answers} onEdit={editQuestion} onContinue={() => setView('confirm')} />
   if (view === 'confirm') return <Confirm onBack={() => setView('review')} onConfirm={confirmAll} />
-  if (view === 'name') return <NameEntry value={name} onChange={setName} onSubmit={finishCertificate} />
-  return <Certificate name={name} score={score} certificateId={certificateId} issuedAt={issuedAt} onRestart={restart} />
+  if (view === 'name') return <NameEntry value={name} onChange={setName} onSubmit={finishCertificate} saving={saving} />
+  return <Certificate name={name} score={score} certificateId={certificateId} issuedAt={issuedAt} onRestart={restart} syncOk={syncOk} />
 }
 
 export { sourceNote }
