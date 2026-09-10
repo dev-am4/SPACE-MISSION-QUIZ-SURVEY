@@ -4,6 +4,8 @@ import App from './App'
 import './styles.css'
 import './mobile.css'
 import './review-enhancer.css'
+import './welcome-qr.css'
 import './review-enhancer'
+import './welcome-qr'
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
