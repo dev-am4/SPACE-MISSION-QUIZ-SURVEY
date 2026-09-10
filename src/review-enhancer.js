@@ -3,8 +3,10 @@ import { questions } from './questions'
 const questionMap = new Map(questions.map((question) => [question.number, question]))
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 
-let lockedQuestionKey = ''
-let unlockTimer = null
+let lastAcceptedQuestionKey = ''
+let lastAcceptedAt = 0
+let root = null
+let enhanceQueued = false
 
 function getCurrentQuestionKey(card) {
   const screen = card.closest('.quiz-screen')
@@ -20,25 +22,16 @@ function guardDuplicateAnswerClicks(event) {
   const questionKey = getCurrentQuestionKey(card)
   if (!questionKey) return
 
-  // React waits briefly before moving to the next question. A fast double tap used to
-  // schedule two navigations and skip the following question. Block only repeated
-  // clicks on the SAME rendered question; a newly rendered question is allowed at once.
-  if (lockedQuestionKey === questionKey) {
+  const now = performance.now()
+  if (lastAcceptedQuestionKey === questionKey && now - lastAcceptedAt < 450) {
     event.preventDefault()
     event.stopPropagation()
     event.stopImmediatePropagation?.()
     return
   }
 
-  lockedQuestionKey = questionKey
-  const screen = card.closest('.quiz-screen')
-  screen?.classList.add('answer-transition-locked')
-
-  clearTimeout(unlockTimer)
-  unlockTimer = setTimeout(() => {
-    if (lockedQuestionKey === questionKey) lockedQuestionKey = ''
-    screen?.classList.remove('answer-transition-locked')
-  }, 900)
+  lastAcceptedQuestionKey = questionKey
+  lastAcceptedAt = now
 }
 
 function buildOptionsRow(question, selectedLetter) {
@@ -89,13 +82,11 @@ function updateReviewCompletion(items) {
   const status = document.querySelector('.review-status span')
   const continueButton = document.querySelector('.review-actionbar .primary-btn')
   const statusWrap = document.querySelector('.review-status')
+  const nextStatus = missingCount === 0
+    ? `ตอบครบ ${questions.length} ข้อ`
+    : `ตอบแล้ว ${answeredCount}/${questions.length} ข้อ · ยังขาด ${missingCount} ข้อ`
 
-  if (status) {
-    status.textContent = missingCount === 0
-      ? `ตอบครบ ${questions.length} ข้อ`
-      : `ตอบแล้ว ${answeredCount}/${questions.length} ข้อ · ยังขาด ${missingCount} ข้อ`
-  }
-
+  if (status && status.textContent !== nextStatus) status.textContent = nextStatus
   statusWrap?.classList.toggle('review-status-incomplete', missingCount > 0)
 
   if (continueButton) {
@@ -123,38 +114,48 @@ function enhanceReviewItems() {
     const existing = content.querySelector(':scope > .review-options-row')
 
     item.classList.toggle('review-item-missing', !selectedLetter)
-
-    if (!selectedLetter) {
-      selectedLine.classList.add('review-selected-original')
-      selectedLine.dataset.reviewMissing = 'true'
-    } else {
-      delete selectedLine.dataset.reviewMissing
-    }
-
-    if (existing?.dataset.selected === selectedLetter) {
-      selectedLine.classList.add('review-selected-original')
-      return
-    }
-
-    existing?.remove()
     selectedLine.classList.add('review-selected-original')
-    selectedLine.insertAdjacentElement('afterend', buildOptionsRow(question, selectedLetter))
+
+    if (!selectedLetter) selectedLine.dataset.reviewMissing = 'true'
+    else delete selectedLine.dataset.reviewMissing
+
+    if (existing?.dataset.selected !== selectedLetter) {
+      existing?.remove()
+      selectedLine.insertAdjacentElement('afterend', buildOptionsRow(question, selectedLetter))
+    }
   })
 
   updateReviewCompletion(items)
 }
 
-const observer = new MutationObserver(() => enhanceReviewItems())
+function observeRoot() {
+  if (root) observer.observe(root, { childList: true, subtree: true })
+}
+
+function runEnhanceSafely() {
+  observer.disconnect()
+  enhanceReviewItems()
+  observeRoot()
+}
+
+function queueEnhance() {
+  if (enhanceQueued) return
+  enhanceQueued = true
+  queueMicrotask(() => {
+    enhanceQueued = false
+    runEnhanceSafely()
+  })
+}
+
+const observer = new MutationObserver(queueEnhance)
 
 function startReviewEnhancer() {
-  const root = document.getElementById('root')
+  root = document.getElementById('root')
   if (!root) return
 
-  // Capture before React's delegated onClick so accidental double taps cannot create
-  // two delayed "next question" actions.
   document.addEventListener('click', guardDuplicateAnswerClicks, true)
-  observer.observe(root, { childList: true, subtree: true })
-  enhanceReviewItems()
+  observeRoot()
+  runEnhanceSafely()
 }
 
 if (document.readyState === 'loading') {
