@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import './fast-runtime'
+import './answer-randomizer'
 import App from './App'
 import './styles.css'
 import './mobile.css'
