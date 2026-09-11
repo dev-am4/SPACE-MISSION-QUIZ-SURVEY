@@ -1,0 +1,89 @@
+/*
+ * Review layout overflow guard.
+ *
+ * The review enhancer renders all answer choices inside a CSS Grid item.
+ * A nowrap flex row can contribute a very large min-content width to the
+ * grid's 1fr track, which makes the whole review scroller wider than the
+ * viewport. Keep every grid track shrinkable and let choices wrap inside
+ * their own card instead of growing the page horizontally.
+ */
+
+.review-screen,
+.review-header,
+.review-scroll,
+.review-section-title,
+.review-list,
+.review-item,
+.review-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.review-screen {
+  width: 100%;
+  overflow: hidden;
+}
+
+.review-header,
+.review-scroll {
+  width: 100%;
+}
+
+.review-scroll {
+  overflow-x: hidden;
+}
+
+.review-section-title,
+.review-list {
+  width: min(1240px, 100%);
+}
+
+.review-item {
+  width: 100%;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+}
+
+.review-content {
+  min-width: 0;
+}
+
+.review-content h3,
+.review-option-text {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.review-options-row {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.review-option-pill {
+  flex: 0 1 auto;
+  max-width: 100%;
+  white-space: normal;
+}
+
+/* Keep the edit action stable while the answer column is allowed to shrink. */
+.edit-btn {
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .review-item {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+  }
+
+  .review-options-row {
+    gap: 5px;
+  }
+
+  .review-option-pill {
+    flex: 1 1 auto;
+  }
+}
