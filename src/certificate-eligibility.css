@@ -31,24 +31,40 @@
   height: 132px;
   margin: 0 auto 20px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
+  gap: 5px;
+  position: relative;
+  box-sizing: border-box;
   border-radius: 50%;
   border: 1px solid rgba(100, 232, 255, .38);
   background: radial-gradient(circle at 35% 28%, rgba(100,232,255,.15), rgba(10,23,40,.92));
   box-shadow: 0 0 40px rgba(100,232,255,.1);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
 .certificate-threshold-score strong {
+  display: block;
+  min-width: 1.35ch;
+  margin: 0;
   color: #7cecff;
   font-family: Orbitron, 'Noto Sans Thai', sans-serif;
   font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-align: right;
 }
 
 .certificate-threshold-score span {
-  margin-left: 4px;
+  display: block;
+  margin: 0;
   color: #9db0c0;
   font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateY(7px);
 }
 
 .certificate-threshold-kicker {
@@ -110,10 +126,16 @@
     width: 108px;
     height: 108px;
     margin-bottom: 16px;
+    gap: 4px;
   }
 
   .certificate-threshold-score strong {
     font-size: 38px;
+  }
+
+  .certificate-threshold-score span {
+    font-size: 14px;
+    transform: translateY(6px);
   }
 
   .certificate-threshold-panel > p:not(.certificate-threshold-kicker) {
